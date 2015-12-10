@@ -1,4 +1,4 @@
-% make simple exaexamples of a few more or less correlated cells
+% make simple examples of a few more or less correlated cells
 % and see how it affects decoding
 %
 %
@@ -99,6 +99,7 @@ for cv_i=1:numel(cvs)
 end;
 
 
+% quantify how the correlation affects overall decoding per trial
 cvs_dense=linspace(-.6,.6,100);
 meanerr=[];
 ntrials_dense=10000;
