@@ -67,6 +67,7 @@ for cv_i=1:numel(cvs)
     end;
     xlabel(['cell ',num2str(plotcells(1)),' rate']);
     ylabel(['cell ',num2str(plotcells(2)),' rate']);
+    title([' Two example cells, cv = ',num2str(cv)]);
     
     subplot(numel(cvs),3,2+((cv_i-1)*3));
     hold on;
@@ -91,7 +92,7 @@ for cv_i=1:numel(cvs)
     ylim([0 15]);
     ylabel('Firing rates across cells');
     xlabel('Trials/stimuli');
-    
+    title([' all ',num2str(ncells),' cells, across all ',num2str(nstims),' stimuli, cv = ',num2str(cv)]);
     %subplot(numel(cvs),3,3+((cv_i-1)*3));
     %hold on;
     
@@ -123,5 +124,6 @@ ylim([0 .6]);
 grid on;
 ylabel('mean per-trial error from mean');
     xlabel('correlation');
+    title('cv vs. per trial decoding error');
     
     
