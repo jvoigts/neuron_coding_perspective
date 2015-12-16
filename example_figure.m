@@ -5,7 +5,7 @@
 ratemax=10;
 ntrials=100;
 
-rng(5) % For reproducibility
+rng(1) % For reproducibility
 nstims=5;
 tuning=normpdf([1:nstims],3.2,1);
 tuning=10*(tuning./max(tuning));
@@ -13,7 +13,7 @@ tuning=10*(tuning./max(tuning));
 ncells=6;
 plotcells=[3 4];
 
-cvs=[.4 0  -0.4];
+cvs=[.5 0  -0.5];
 
 ll=linspace(0,ratemax,50);
 %
@@ -30,6 +30,7 @@ for cv_i=1:numel(cvs)
     cv= cvs(cv_i);
     
     sigma=diag(ones(ncells-1,1)*cv,-1)+diag(ones(ncells-1,1)*cv,1)+eye(ncells);
+    sigma(ncells,1)=cv;    sigma(1,ncells)=cv;
     sigma_p=(sigma*sigma'); % make positive semidefinite
     
     
@@ -96,12 +97,12 @@ for cv_i=1:numel(cvs)
     %subplot(numel(cvs),3,3+((cv_i-1)*3));
     %hold on;
     
-    
+    drawnow;
 end;
 
 
-% quantify how the correlation affects overall decoding per trial
-cvs_dense=linspace(-.6,.6,100);
+%% quantify how the correlation affects overall decoding per trial
+cvs_dense=linspace(-.5,1,100);
 meanerr=[];
 ntrials_dense=10000;
 for cv_i=1:numel(cvs_dense)
@@ -109,7 +110,9 @@ for cv_i=1:numel(cvs_dense)
     cv= cvs_dense(cv_i);
     
     sigma=diag(ones(ncells-1,1)*cv,-1)+diag(ones(ncells-1,1)*cv,1)+eye(ncells);
+    sigma(ncells,1)=cv;    sigma(1,ncells)=cv;
     sigma_p=(sigma*sigma'); % make positive semidefinite
+    
     for stim=1:nstims
         rates{stim} = mvnrnd(mu{stim},sigma_p,ntrials_dense);
         
@@ -120,7 +123,7 @@ end;
 
 subplot(numel(cvs),3,3);
 plot(cvs_dense,mean(meanerr'));
-ylim([0 .6]);
+ylim([0 .8]);
 grid on;
 ylabel('mean per-trial error from mean');
     xlabel('correlation');
