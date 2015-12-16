@@ -5,9 +5,10 @@
 ratemax=10;
 ntrials=100;
 
-rng(1) % For reproducibility
+rng(3) % For reproducibility
+
 nstims=5;
-tuning=normpdf([1:nstims],3.2,1);
+tuning=normpdf([1:nstims],3.0,1.1);
 tuning=10*(tuning./max(tuning));
 
 ncells=6;
@@ -18,6 +19,8 @@ cvs=[.5 0  -0.5];
 ll=linspace(0,ratemax,50);
 %
 fstrs={'b'};
+cmap = @(stim) 0.5+([sin(stim),-sin(stim*.2),-sin(stim*1.2)]/2);
+
 % simulate two cells with and without correlation
 
 for stim=1:nstims
@@ -45,9 +48,10 @@ for cv_i=1:numel(cvs)
     subplot(numel(cvs),3,1+((cv_i-1)*3));
     hold on;
     
-    for stim=[2 5]
+    
+    for stim=[1 4]
         
-        thiscolor=0.5+([sin(stim),-sin(stim*.2),-sin(stim*1.2)]/2);
+        thiscolor=cmap(stim);
         
         rates{stim} = mvnrnd(mu{stim},sigma_p,ntrials);
         
@@ -64,7 +68,11 @@ for cv_i=1:numel(cvs)
         
         xlim([0 ratemax]);
         ylim([0 ratemax]);
+        ax=gca;
+        ax.XTick=[0 10];
+        ax.YTick=[0 10];
         daspect([1 1 1]);
+        
     end;
     xlabel(['cell ',num2str(plotcells(1)),' rate']);
     ylabel(['cell ',num2str(plotcells(2)),' rate']);
@@ -79,7 +87,7 @@ for cv_i=1:numel(cvs)
         
         rates{stim} = mvnrnd(mu{stim},sigma_p,ntrials);
         
-        thiscolor=0.5+([sin(stim),-sin(stim*.6),-sin(stim*1.2)]/2);
+        thiscolor=cmap(stim);
         
         plot(stim+[-trialwidth trialwidth],[1 1]*mu{stim}(1),'color',thiscolor);
         
@@ -88,7 +96,8 @@ for cv_i=1:numel(cvs)
         plot(xl+stim,rates{stim}(1,:),'k.','MarkerSize',10);
         
         plot(stim+[-trialwidth trialwidth],[1 1]*mean(rates{stim}(1,:)) ,'k--');
-        
+        ax=gca;
+        ax.YTick=[0 10];
     end;
     ylim([0 15]);
     ylabel('Firing rates across cells');
@@ -124,9 +133,11 @@ end;
 subplot(numel(cvs),3,3);
 plot(cvs_dense,mean(meanerr'));
 ylim([0 .8]);
+ax=gca;
+ax.XTick=[-0.5:.2:1];
+ax.YTick=[0:0.2:1];
 grid on;
 ylabel('mean per-trial error from mean');
-    xlabel('correlation');
-    title('cv vs. per trial decoding error');
-    
-    
+xlabel('correlation');
+title('cv vs. per trial decoding error');
+
