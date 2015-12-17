@@ -27,7 +27,7 @@ for stim=1:nstims
     mu{stim}=1+ones(1,ncells)*tuning(stim);
 end;
 
-figure (1); clf;
+fig=figure(1); clf;
 for cv_i=1:numel(cvs)
     
     cv= cvs(cv_i);
@@ -134,10 +134,13 @@ subplot(numel(cvs),3,3);
 plot(cvs_dense,mean(meanerr'));
 ylim([0 .8]);
 ax=gca;
-ax.XTick=[-0.5:.2:1];
 ax.YTick=[0:0.2:1];
 grid on;
 ylabel('mean per-trial error from mean');
 xlabel('correlation');
 title('cv vs. per trial decoding error');
+
+%% save fig
+
+print('corr_plot','-dpdf')
 
