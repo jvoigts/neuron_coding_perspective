@@ -2,16 +2,22 @@
 % and see how it affects decoding
 %
 %
+rng(1) % For reproducibility
+
 ratemax=10;
 ntrials=100;
 
-rng(5) % For reproducibility
+
 nstims=5;
-tuning=normpdf([1:nstims],3.2,1);
-tuning=10*(tuning./max(tuning));
 
 ncells=6;
 plotcells=[3 4];
+
+for i=1:ncells
+    tuning(i,:)=normpdf([1:nstims],3.2,1);
+    tuning(i,:)=10*(tuning(i,:)./max(tuning(i,:)));
+    tuning(i,:)=tuning(i,:)+ ((i==3).* normpdf([1:nstims],1,.5)*15);  % make cell nr 3 more tuned to 1st stim, all others are tuned the same
+end;
 
 cvs=[.4 0  -0.4];
 
@@ -21,7 +27,7 @@ fstrs={'b'};
 % simulate two cells with and without correlation
 
 for stim=1:nstims
-    mu{stim}=1+ones(1,ncells)*tuning(stim);
+    mu{stim}=1+ones(1,ncells).*tuning(:, stim)'; % average rate / tuning per cell per stimulus
 end;
 
 figure (1); clf;
@@ -89,7 +95,7 @@ for cv_i=1:numel(cvs)
         plot(stim+[-trialwidth trialwidth],[1 1]*mean(rates{stim}(1,:)) ,'k--');
         
     end;
-    ylim([0 15]);
+    ylim([0 20]);
     ylabel('Firing rates across cells');
     xlabel('Trials/stimuli');
     title([' all ',num2str(ncells),' cells, across all ',num2str(nstims),' stimuli, cv = ',num2str(cv)]);
