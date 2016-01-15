@@ -14,9 +14,9 @@ ncells=6;
 plotcells=[3 4];
 
 for i=1:ncells
-    tuning(i,:)=normpdf([1:nstims],3.2,1);
-    tuning(i,:)=10*(tuning(i,:)./max(tuning(i,:)));
-    tuning(i,:)=tuning(i,:)+ ((i==3).* normpdf([1:nstims],1,.5)*15);  % make cell nr 3 more tuned to 1st stim, all others are tuned the same
+    tuning(i,:)=1+0.*normpdf([1:nstims],3.2,1);
+    tuning(i,:)=3*(tuning(i,:)./max(tuning(i,:)));
+    tuning(i,:)=tuning(i,:)+ ((i==3).* normpdf([1:nstims],4,1)*10);  % make cell nr 3 more tuned to 1st stim, all others are tuned the same
 end;
 
 cvs=[.4 0  -0.4];
